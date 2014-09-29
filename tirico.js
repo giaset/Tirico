@@ -15,7 +15,11 @@ function get_plays() {
 					var play_id = parseInt(play)
 					if (play_id > last_play_id) {
 						last_play_id = play_id
-						console.log(plays[play_id].desc)
+						var play_desc = plays[play_id].desc
+						console.log(play_desc)
+						if (play_desc == 'END GAME') {
+							process.exit()
+						}
 					}
 				}
 			}
