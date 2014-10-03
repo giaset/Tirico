@@ -1,8 +1,13 @@
 var request = require('request')
+var Firebase = require('firebase')
+var firebaseRef = new Firebase('https://tirico.firebaseio.com/')
 
 var game_id = process.argv[2]
 
 var last_play_id = 0
+
+var playsRef = firebaseRef.child('plays')
+var gamePlaysRef = firebaseRef.child('games/'+game_id+'/plays')
 
 function get_plays() {
 	request('http://www.nfl.com/liveupdate/game-center/'+game_id+'/'+game_id+'_gtd.json', function (error, response, body) {
@@ -15,9 +20,13 @@ function get_plays() {
 					var play_id = parseInt(play)
 					if (play_id > last_play_id) {
 						last_play_id = play_id
-						var play_desc = plays[play_id].desc
-						console.log(play_desc)
-						if (play_desc == 'END GAME') {
+						var the_play = plays[play_id]
+						delete the_play.players
+						var newPlay = playsRef.push(the_play)
+						var newPlayID = newPlay.name()
+						gamePlaysRef.child(newPlayID).set(true)
+						console.log(the_play.desc)
+						if (the_play.desc == 'END GAME') {
 							process.exit()
 						}
 					}
