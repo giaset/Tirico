@@ -10,9 +10,13 @@
 		<!-- STUFF GOES HERE -->
 		<script>
 			var firebase = new Firebase('https://tirico.firebaseio.com/');
-			firebase.on('child_added', function(snapshot) {
-  				var play = snapshot.val();
-  				addPlay(play);
+			var playsRef = firebase.child('plays');
+			var gamePlaysRef = firebase.child('games/2014100200/plays');
+			gamePlaysRef.on('child_added', function(snapshot) {
+  				var playID = snapshot.name();
+  				playsRef.child(playID).once('value', function(playSnapshot) {
+  					addPlay(playSnapshot.val());
+  				});
 			});
 			function addPlay(play) {
 				$('<div/>').text(play.desc).appendTo($('#playsDiv'));
