@@ -19,7 +19,7 @@
   				});
 			});
 			function addPlay(play) {
-				$('<div/>').text(play.desc).appendTo($('#playsDiv'));
+				$('<div/>').text(play.desc).prependTo($('#playsDiv'));
 				$('#playsDiv')[0].scrollTop = $('#playsDiv')[0].scrollHeight;
 			}
 		</script>
